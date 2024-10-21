@@ -73,11 +73,12 @@ def update_singer(singer_id: int, new_singer: UpdateSinger):
             status_code=404, detail=f"Singer with the ID {id} not found."
         )
     
-    stored_singer = singers[singer_id]
-    stored_singer_model = Singer(**stored_singer) # store the singer as an instance of the Singer model (for validation etc.)
-    update_data = new_singer.model_dump(exclude_unset=True) # creates a dictionary from the json body (new_singer). exclude_unset = enables partial updates
-    updated_singer = stored_singer_model.model_construct(**stored_singer_model.model_dump(), **update_data)
-    singers[singer_id] = jsonable_encoder(update_singer)
+    stored_singer_data = singers[singer_id]
+    update_data = new_singer.model_dump(exclude_unset=True) # convert request body to a dictionary
+    stored_singer_data.update(update_data) # update the old singer data with the new data
+    updated_singer = Singer(**stored_singer_data) # convert the updated singer dictionary to an instance of the Singer model (for validations)
+    singers[singer_id] = updated_singer.dict()  # store the updated data as a dictionary
+    
     return updated_singer
 
     
