@@ -1,7 +1,6 @@
-from fastapi import FastAPI, Path, Query, HTTPException
+from fastapi import FastAPI, Path, HTTPException
 from pydantic import BaseModel
 from typing import Optional
-from fastapi.encoders import jsonable_encoder
 
 app = FastAPI()
 
@@ -64,7 +63,7 @@ def get_singer_by_name(name: str | None = None):
 
 @app.post("/singers", status_code=201, response_model=Singer)
 def create_singer(singer: Singer):
-    # add validation - empty request body fields, singer already exists
+    #TODO: add validation - empty request body fields, singer already exists
 
     for singer_id in singers:
         if singers[singer_id]["name"] == singer.name:
